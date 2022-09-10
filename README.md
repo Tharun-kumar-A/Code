@@ -24,3 +24,6 @@
 ---
 
 ### Thank you \.\.\.
+
+---
+Code © 2022 by Tharun Kumar is licensed under CC BY-NC-ND 4.0
