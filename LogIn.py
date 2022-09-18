@@ -2,6 +2,7 @@ import csv
 #from passlib.hash import pbkdf2_sha256
 
 path = "/storage/emulated/0/MEDIA/document/AcodeProjects/Python/LogIn/logInData.csv"
+# You can specify the path as your wish
 
 def main():
 	a=1
@@ -19,40 +20,39 @@ def main():
 		elif(a==2):
 			set_up(2) #sign up
 		elif(a==3):
-			print('''
-####   #    #  ######
-#  #    #  #   #
-######   ##    ######
-#    #   ##    #
-######   ##    ######  # # #
-				''')
+			print("\n\tBYE BYE ...")
 		else:
 			print("\nERR34_INVALID_OPTION")
 
 def set_up(a):
+	with open(path,'a') as omg:
+		pass
 	with open(path,'r') as l:
 	# import the UIDs
 	    read=csv.reader(l,delimiter=',')
-	    myUid=[]
-	    myName=[]
-	    myPass=[]
-	    myData=[]
-	    lines=[]
-	    
-	    for row in read:
-	    	if(row!=[]):
-	    		myUid.append(int(row[0]))
-	    		myName.append(row[1])
-	    		myPass.append(row[2])
-	    		myData.append(row[3])
-	    		lines.append(row)
-	    #print(myUid)
+	    lin=list(read)
+	    if (lin==[]):
+	    	with open(path,'w') as go:
+	    		writi=csv.writer(go)
+	    		rom=[1,'UserName','Password','UserData']
+	    		writi.writerow(rom)
 	    if(a==1):
-	    	log_in(myUid,myName,myPass,myData,lines)
+	    	log_in()
 	    elif(a==2):
-	    	sign_up(lines)
+	    	sign_up()
 	# csv file 'l' scope ends here
-def log_in(mU,mN,mP,mD,lst):
+def log_in():
+	mU,mP,mN,mD,lst=[],[],[],[],[]
+	with open(path,'r') as ko:
+		rko=csv.reader(ko,delimiter=',')
+		
+		for r in rko:
+			mU.append(int(r[0]))
+			mP.append(r[2])
+			mN.append(r[1])
+			mD.append(r[3])
+			lst.append(r)
+	#print(mU)
 	uid= int(input("\nEnter your UID : "))
 	index=binary_search_recur(mU,0,len(mU)-1,uid)
 	if(index==-1):
@@ -63,35 +63,41 @@ def log_in(mU,mN,mP,mD,lst):
 		print("\nERR42_INVALID_PASSWORD")
 		return None
 	logged_in(uid,index,mN[index],mP[index],mD[index],lst)
-def sign_up(lst):
-	modi=lst[0]
-	ind=int(modi[0])
-	uid=12344+ind
-	name=str(input("\nEnter Your Username : "))
-	pas=str(input("\nEnter the password : "))
-	repas=str(input("\nReconfirm the password : "))
-	if(pas!=repas):
-		print("\nERR72_PASSWORD_MISMATCH")
-		return None
-	newrow=[uid,name,pas,""]
-	print("\nNote:\n\t Your UID : ",uid)
-	sto=input("\nPress Enter to continue...\n")
-	ind+=1
-	modi[0]=ind
-	lst[0]=modi
-	with open(path,'w') as li:
-		writer=csv.writer(li)
-		writer.writerows(lst)
-	with open(path,'a') as lis:
-		write=csv.writer(lis)
-		write.writerow(newrow)
-	return None
+def sign_up():
+	with open(path,'r') as hi:
+		l=csv.reader(hi,delimiter=',')
+		lst=[]
+		for r in l:
+			lst.append(r)
+		modi=lst[0]
+		ind=int(modi[0])
+		uid=12344+ind
+		name=str(input("\nEnter Your Username : "))
+		pas=str(input("\nEnter the password : "))
+		repas=str(input("\nReconfirm the password : "))
+		if(pas!=repas):
+			print("\nERR72_PASSWORD_MISMATCH")
+			return None
+		newrow=[uid,name,pas,""]
+		print("\nNote:\n\t Your UID : ",uid)
+		sto=input("\nPress Enter to continue...\n")
+		ind+=1
+		modi[0]=ind
+		lst[0]=modi
+		lst.append(newrow)
+		with open(path,'w') as li:
+			writer=csv.writer(li)
+			writer.writerows(lst)
+		i=ind- 1
+		logged_in(uid,i,name,pas,"",lst)
 def logged_in(uid,ind,name,pas,dat,lst1):
 	a=1
+	print("\nHi, ",name)
 	while(a!=6 and a!=5):
-		print("\nHi, ",name)
+		
 		print('''\n
 ----------------MENU--------------
+  User Name : %s
   Your Uid : %u
   Data : %s
 	1. Change the User Data
@@ -101,7 +107,7 @@ def logged_in(uid,ind,name,pas,dat,lst1):
 	5. Save and Log off
 	6. Delete Account
 ----------------------------------
-		\n'''%(uid,dat))
+		\n'''%(name,uid,dat))
 		a=int(input("\nEnter your option : "))
 		if(a==1):
 			dat=input("\nEnter the new data : ")
@@ -128,6 +134,10 @@ def logged_in(uid,ind,name,pas,dat,lst1):
 			yon=input("\nDo you want to continue ? (Y/N) : ")
 			if(yon=='Y' or yon=='y'):
 				lst1[ind]=[]
+				nad=lst1[0]
+				nad[0]- 1
+				lst1[0]=nad
+				
 				print("\nYour account is deleted...")
 			elif(yon=='N' or yon=='n'):
 				print("\nOperation Cancelled...")
